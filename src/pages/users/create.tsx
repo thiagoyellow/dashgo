@@ -15,21 +15,25 @@ type CreateUserFormData = {
     password: string;
     password_confirmation: string;
 };
-  
-const createUserFormSchema = yup.object().shape({
-name: yup.string().required('Nome obrigatório'),
-email: yup.string().required('E-mail obrigatório').email('E-mail inválido'),
-password: yup.string().required('Senha obrigatória').min(6, 'No mínimo 6 caracteres'),
-password_confirmation: yup.string().oneOf([
-    null, yup.ref('password')
-], 'As senhas precisam ser iguais')
-})
+
+
+  const createUserFormSchema = yup.object().shape({
+    name: yup.string().required('Nome obrigatório'),
+    email: yup.string().required('E-mail obrigatório').email('E-mail inválido'),
+    password: yup.string().required('Senha obrigatória').min(6, 'No mínimo 6 caracteres'),
+    password_confirmation: yup.string().oneOf([
+        null, yup.ref('password')
+    ], 'As senhas precisam ser iguais')
+  })
   
 
 export default function CreateUser() {
-    const { register, handleSubmit, formState, errors } = useForm({
+    const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(createUserFormSchema)
     })
+
+    const { errors } = formState
+
 
     const handleCreateUser: SubmitHandler<CreateUserFormData> = async (values) => {
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -62,7 +66,7 @@ export default function CreateUser() {
                                 name="name" 
                                 label="Nome completo" 
                                 error={errors.name}
-                                ref={register} 
+                                {...register('name')}
                             />
 
                             <Input 
@@ -70,7 +74,7 @@ export default function CreateUser() {
                                 type="email" 
                                 label="E-mail" 
                                 error={errors.email}
-                                ref={register} 
+                                {...register('email')} 
                             />
 
                         </SimpleGrid>
@@ -82,16 +86,14 @@ export default function CreateUser() {
                                 type="password"
                                 label="Senha"
                                 error={errors.password}
-                                ref={register} 
-                             />
+                                {...register('password')}                             />
 
                             <Input 
                                 name="password_confirmation" 
                                 type="password" 
                                 label="Confirmação da senha" 
                                 error={errors.password_confirmation}
-                                ref={register} 
-                            />
+                                {...register('password_confirmation')}                            />
                             
                         </SimpleGrid>
                     </VStack>

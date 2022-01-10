@@ -15,9 +15,11 @@ const signInFormSchema = yup.object().shape({
 })
 
 export default function SignIn() {
-  const { register, handleSubmit, formState, errors } = useForm({
+  const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema)
   })
+
+  const { errors } = formState
 
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
@@ -28,7 +30,7 @@ export default function SignIn() {
 
   return (
     <Flex 
-      w="100vh" 
+      w="100%" 
       h="100vh" 
       align="center" 
       justify="center"
@@ -48,8 +50,8 @@ export default function SignIn() {
         name="email" 
         type="email" 
         label="E-mail" 
-        error={errors.email} 
-        ref={register} 
+        error={errors.email}
+        {...register('email')} 
       />
 
       <Input 
@@ -57,7 +59,7 @@ export default function SignIn() {
         type="password" 
         label="Senha" 
         error={errors.password} 
-        ref={register} 
+        {...register('password')} 
       />
     
     </Stack>
